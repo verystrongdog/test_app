@@ -116,7 +116,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.cameraPreviewButton).setOnClickListener {
             cameraPreviewLauncher.launch(null)
         }
-        findViewById<Button>(R.id/uploadReportButton).setOnClickListener {
+        val uploadReportButton = findViewById<Button>(R.id.uploadReportButton)
+        uploadReportButton.setOnClickListener {
             val endpoint = currentEndpoint()
             preferenceStore.saveEndpoint(endpoint)
             if (endpoint.isBlank()) {
