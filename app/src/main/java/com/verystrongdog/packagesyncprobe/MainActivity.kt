@@ -20,6 +20,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var languageToggleButton: Button
     private lateinit var endpointInput: EditText
     private lateinit var profileText: TextView
     private lateinit var reportText: TextView
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.RequestMultiplePermissions(),
     ) { results ->
         val grantedCount = results.values.count { it }
-        appendLog("Runtime permission request completed: $grantedCount/${results.size} granted")
+        appendLog(getString(R.string.log_runtime_permission_request_completed, grantedCount, results.size))
         refreshUi()
     }
 
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             refreshUi()
             return@registerForActivityResult
         }
-        runOnWorker("Saving camera preview") {
+        runOnWorker(getString(R.string.action_saving_camera_preview)) {
             val summary = ProbeEngine.saveCameraPreview(this, bitmap)
             updateReport(currentReport.copy(generatedAtMillis = System.currentTimeMillis(), cameraSummary = summary))
             appendLog(summary)
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppLocaleManager.applySavedLocale(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -64,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         eventLogStore = EventLogStore(this)
         currentReport = preferenceStore.loadReport()
 
+        languageToggleButton = findViewById(R.id.languageToggleButton)
         endpointInput = findViewById(R.id.endpointInput)
         profileText = findViewById(R.id.profileText)
         reportText = findViewById(R.id.reportText)
@@ -71,15 +74,19 @@ class MainActivity : AppCompatActivity() {
 
         endpointInput.setText(preferenceStore.loadEndpoint(getString(R.string.default_endpoint)))
 
+        languageToggleButton.setOnClickListener {
+            preferenceStore.saveEndpoint(currentEndpoint())
+            AppLocaleManager.toggleLocale(this)
+        }
         findViewById<Button>(R.id.requestPermissionsButton).setOnClickListener {
             permissionLauncher.launch(ProbeEngine.requestedRuntimePermissions().toTypedArray())
         }
         findViewById<Button>(R.id.refreshProfileButton).setOnClickListener {
             refreshUi()
-            appendLog("Refreshed app profile")
+            appendLog(getString(R.string.log_refreshed_app_profile))
         }
         findViewById<Button>(R.id.readContactsButton).setOnClickListener {
-            runProbe("Read contacts snapshot") {
+            runProbe(getString(R.string.log_read_contacts_snapshot)) {
                 currentReport.copy(
                     generatedAtMillis = System.currentTimeMillis(),
                     contactsSummary = ProbeEngine.collectContacts(this),
@@ -87,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         findViewById<Button>(R.id.scanImagesButton).setOnClickListener {
-            runProbe("Scanned photo library") {
+            runProbe(getString(R.string.log_scanned_photo_library)) {
                 currentReport.copy(
                     generatedAtMillis = System.currentTimeMillis(),
                     imageSummary = ProbeEngine.collectImages(this),
@@ -95,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         findViewById<Button>(R.id.scanPackagesButton).setOnClickListener {
-            runProbe("Enumerated installed packages") {
+            runProbe(getString(R.string.log_enumerated_installed_packages)) {
                 currentReport.copy(
                     generatedAtMillis = System.currentTimeMillis(),
                     packageSummary = ProbeEngine.collectPackages(this),
@@ -103,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         findViewById<Button>(R.id.captureLocationButton).setOnClickListener {
-            runProbe("Captured device location") {
+            runProbe(getString(R.string.log_captured_device_location)) {
                 currentReport.copy(
                     generatedAtMillis = System.currentTimeMillis(),
                     locationSummary = ProbeEngine.collectLocation(this),
@@ -123,8 +130,9 @@ class MainActivity : AppCompatActivity() {
             if (endpoint.isBlank()) {
                 appendLog(getString(R.string.upload_skipped))
             } else {
-                runOnWorker("Uploading report") {
+                runOnWorker(getString(R.string.action_uploading_report)) {
                     val summary = NetworkUploader.uploadJson(
+                        this,
                         endpoint,
                         ProbeEngine.buildUploadPayload(this, currentReport),
                     )
@@ -147,7 +155,7 @@ class MainActivity : AppCompatActivity() {
             eventLogStore.clear()
             preferenceStore.clearReport()
             currentReport = ProbeReport.empty()
-            appendLog("Cleared local report and log state")
+            appendLog(getString(R.string.log_cleared_local_state))
         }
 
         refreshUi()
@@ -173,7 +181,13 @@ class MainActivity : AppCompatActivity() {
         workerExecutor.execute {
             runCatching(block).onFailure { error ->
                 mainHandler.post {
-                    appendLog("$actionLabel failed: ${error.message}")
+                    appendLog(
+                        getString(
+                            R.string.log_action_failed,
+                            actionLabel,
+                            error.message ?: getString(R.string.unknown_error),
+                        ),
+                    )
                     Toast.makeText(this, error.message ?: actionLabel, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -185,19 +199,19 @@ class MainActivity : AppCompatActivity() {
             appendLog(getString(R.string.audio_in_progress))
             return
         }
-        runOnWorker("Recording microphone sample") {
+        runOnWorker(getString(R.string.action_recording_microphone_sample)) {
             val (recorder, file) = ProbeEngine.startAudioCapture(this)
             activeRecorder = recorder
             activeAudioFile = file
-            appendLog("Started a 5-second microphone recording to ${file.absolutePath}")
+            appendLog(getString(R.string.log_started_microphone_recording, file.absolutePath))
             mainHandler.postDelayed({
                 val summary = runCatching {
                     recorder.stop()
                     recorder.release()
-                    "Recorded 5-second microphone sample to ${file.absolutePath} (${file.length()} bytes)"
+                    getString(R.string.log_recorded_microphone_sample, file.absolutePath, file.length())
                 }.getOrElse { error ->
                     runCatching { file.delete() }
-                    "Audio capture failed during stop: ${error.message}"
+                    getString(R.string.log_audio_capture_failed, error.message ?: getString(R.string.unknown_error))
                 }
                 activeRecorder = null
                 activeAudioFile = null
@@ -215,8 +229,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshUi() {
         preferenceStore.saveEndpoint(currentEndpoint())
+        languageToggleButton.text = getString(
+            if (AppLocaleManager.isChinese(this)) {
+                R.string.switch_to_english
+            } else {
+                R.string.switch_to_chinese
+            },
+        )
         profileText.text = ProbeEngine.buildAppProfile(this)
-        reportText.text = currentReport.format().ifBlank { getString(R.string.empty_report) }
+        reportText.text = currentReport.format(this).ifBlank { getString(R.string.empty_report) }
         logText.text = eventLogStore.getAll().ifBlank { getString(R.string.empty_log) }
     }
 

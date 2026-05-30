@@ -1,12 +1,13 @@
 package com.verystrongdog.packagesyncprobe
 
+import android.content.Context
 import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
 object NetworkUploader {
-    fun uploadJson(endpoint: String, payload: JSONObject): String {
+    fun uploadJson(context: Context, endpoint: String, payload: JSONObject): String {
         val connection = (URL(endpoint).openConnection() as HttpURLConnection).apply {
             requestMethod = "POST"
             connectTimeout = 8000
@@ -25,7 +26,11 @@ object NetworkUploader {
                 ?.use { it.readText() }
                 .orEmpty()
                 .take(180)
-            "HTTP $code to $endpoint${if (body.isNotBlank()) ", body: $body" else ""}"
+            if (body.isNotBlank()) {
+                context.getString(R.string.network_upload_result_with_body, code, endpoint, body)
+            } else {
+                context.getString(R.string.network_upload_result, code, endpoint)
+            }
         } finally {
             connection.disconnect()
         }

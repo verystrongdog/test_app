@@ -10,6 +10,7 @@ class BackgroundProbeWorker(
     params: WorkerParameters,
 ) : Worker(appContext, params) {
     override fun doWork(): Result {
+        AppLocaleManager.applySavedLocale(applicationContext)
         val store = PreferenceStore(applicationContext)
         val logStore = EventLogStore(applicationContext)
         val endpoint = inputData.getString(KEY_ENDPOINT).orEmpty()
@@ -19,22 +20,26 @@ class BackgroundProbeWorker(
         val contactsSummary = if (ProbeEngine.hasPermission(applicationContext, Manifest.permission.READ_CONTACTS)) {
             ProbeEngine.collectContacts(applicationContext)
         } else {
-            "Skipped contact read because READ_CONTACTS is missing"
+            applicationContext.getString(R.string.background_contacts_skipped)
         }
         val uploadSummary = if (endpoint.isBlank()) {
             applicationContext.getString(R.string.upload_skipped)
         } else {
             runCatching {
                 NetworkUploader.uploadJson(
+                    applicationContext,
                     endpoint,
                     ProbeEngine.buildUploadPayload(applicationContext, report.copy(packageSummary = packageSummary)),
                 )
             }.getOrElse { error ->
-                "Background upload failed: ${error.message}"
+                applicationContext.getString(
+                    R.string.background_upload_failed,
+                    error.message ?: applicationContext.getString(R.string.unknown_error),
+                )
             }
         }
 
-        val summary = "Background probe ran package scan and optional upload. $packageSummary. $uploadSummary"
+        val summary = applicationContext.getString(R.string.background_probe_summary, packageSummary, uploadSummary)
         report = report.copy(
             generatedAtMillis = System.currentTimeMillis(),
             contactsSummary = contactsSummary,

@@ -5,18 +5,11 @@ import org.junit.Test
 
 class ProbeReportTest {
     @Test
-    fun formatIncludesCollectedFields() {
-        val report = ProbeReport(
-            generatedAtMillis = 1L,
-            contactsSummary = "contacts ok",
-            packageSummary = "packages ok",
-            lastUploadSummary = "upload ok",
-        )
+    fun emptyReportStartsWithoutSnapshots() {
+        val report = ProbeReport.empty()
 
-        val formatted = report.format()
-
-        assertTrue(formatted.contains("contacts ok"))
-        assertTrue(formatted.contains("packages ok"))
-        assertTrue(formatted.contains("upload ok"))
+        assertTrue(report.contactsSummary == null)
+        assertTrue(report.packageSummary == null)
+        assertTrue(report.lastUploadSummary == null)
     }
 }

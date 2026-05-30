@@ -26,6 +26,13 @@
             android:textColor="@color/probe_ink"
             android:textSize="15sp" />
 
+        <Button
+            android:id="@+id/languageToggleButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/switch_to_chinese" />
+
         <EditText
             android:id="@+id/endpointInput"
             android:layout_width="match_parent"
@@ -180,4 +187,3 @@
 
     </LinearLayout>
 </ScrollView>
-

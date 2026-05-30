@@ -59,9 +59,9 @@ object ProbeEngine {
         val suspiciousHit = if (context.packageName.lowercase(Locale.US).contains(SUSPICIOUS_KEYWORD) ||
             appLabel.lowercase(Locale.US).contains(SUSPICIOUS_KEYWORD)
         ) {
-            "yes ($SUSPICIOUS_KEYWORD)"
+            context.getString(R.string.suspicious_keyword_yes, SUSPICIOUS_KEYWORD)
         } else {
-            "no"
+            context.getString(R.string.suspicious_keyword_no)
         }
         return context.getString(
             R.string.profile_template,
@@ -94,15 +94,15 @@ object ProbeEngine {
                 }
             }
         }
-        val sampleText = samples.takeIf { it.isNotEmpty() }?.joinToString(", ") ?: "none"
-        return "Read $count phone-contact rows; samples: $sampleText"
+        val sampleText = samples.takeIf { it.isNotEmpty() }?.joinToString(", ") ?: context.getString(R.string.value_none)
+        return context.getString(R.string.contacts_summary, count, sampleText)
     }
 
     fun collectImages(context: Context): String {
         val permission = mediaPermission()
         requirePermission(context, permission)
         var count = 0
-        var newestLabel = "none"
+        var newestLabel = context.getString(R.string.value_none)
         context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME),
@@ -121,7 +121,7 @@ object ProbeEngine {
                 }
             }
         }
-        return "Scanned $count image entries; newest: $newestLabel"
+        return context.getString(R.string.images_summary, count, newestLabel)
     }
 
     fun collectPackages(context: Context): String {
@@ -136,7 +136,7 @@ object ProbeEngine {
             .sorted()
             .take(5)
             .joinToString(", ")
-        return "Enumerated ${packages.size} installed applications; sample: $sample"
+        return context.getString(R.string.packages_summary, packages.size, sample)
     }
 
     fun collectLocation(context: Context): String {
@@ -147,9 +147,14 @@ object ProbeEngine {
             .mapNotNull { provider -> runCatching { locationManager.getLastKnownLocation(provider) }.getOrNull() }
             .maxByOrNull { it.time }
         return if (best == null) {
-            "No last-known location is available on this device right now"
+            context.getString(R.string.location_unavailable)
         } else {
-            "Captured last-known location lat=${"%.5f".format(best.latitude)}, lon=${"%.5f".format(best.longitude)}, provider=${best.provider}"
+            context.getString(
+                R.string.location_summary,
+                "%.5f".format(best.latitude),
+                "%.5f".format(best.longitude),
+                best.provider,
+            )
         }
     }
 
@@ -158,7 +163,7 @@ object ProbeEngine {
         FileOutputStream(file).use { stream ->
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
         }
-        return "Saved camera preview to ${file.absolutePath} (${file.length()} bytes)"
+        return context.getString(R.string.camera_saved_summary, file.absolutePath, file.length())
     }
 
     fun startAudioCapture(context: Context): Pair<MediaRecorder, File> {
@@ -184,7 +189,7 @@ object ProbeEngine {
             .put("packageName", context.packageName)
             .put("generatedAtMillis", report.generatedAtMillis)
             .put("report", JSONObject(report.toJson()))
-            .put("notes", "Controlled high-risk behavior test payload")
+            .put("notes", context.getString(R.string.upload_payload_note))
     }
 
     fun mediaPermission(): String {

@@ -1,5 +1,6 @@
 package com.verystrongdog.packagesyncprobe
 
+import android.content.Context
 import android.text.format.DateFormat
 import org.json.JSONObject
 import java.util.Date
@@ -29,17 +30,23 @@ data class ProbeReport(
             .toString()
     }
 
-    fun format(): String {
+    fun format(context: Context): String {
         val lines = listOf(
-            "Generated at: ${DateFormat.format("yyyy-MM-dd HH:mm:ss", Date(generatedAtMillis))}",
-            "Contacts: ${contactsSummary ?: "not collected"}",
-            "Images: ${imageSummary ?: "not collected"}",
-            "Packages: ${packageSummary ?: "not collected"}",
-            "Location: ${locationSummary ?: "not collected"}",
-            "Audio: ${audioSummary ?: "not collected"}",
-            "Camera: ${cameraSummary ?: "not collected"}",
-            "Upload: ${lastUploadSummary ?: "not collected"}",
-            "Background probe: ${lastBackgroundProbeSummary ?: "not collected"}",
+            context.getString(
+                R.string.report_generated_at,
+                DateFormat.format("yyyy-MM-dd HH:mm:ss", Date(generatedAtMillis)),
+            ),
+            context.getString(R.string.report_contacts, contactsSummary ?: context.getString(R.string.report_not_collected)),
+            context.getString(R.string.report_images, imageSummary ?: context.getString(R.string.report_not_collected)),
+            context.getString(R.string.report_packages, packageSummary ?: context.getString(R.string.report_not_collected)),
+            context.getString(R.string.report_location, locationSummary ?: context.getString(R.string.report_not_collected)),
+            context.getString(R.string.report_audio, audioSummary ?: context.getString(R.string.report_not_collected)),
+            context.getString(R.string.report_camera, cameraSummary ?: context.getString(R.string.report_not_collected)),
+            context.getString(R.string.report_upload, lastUploadSummary ?: context.getString(R.string.report_not_collected)),
+            context.getString(
+                R.string.report_background_probe,
+                lastBackgroundProbeSummary ?: context.getString(R.string.report_not_collected),
+            ),
         )
         return lines.joinToString("\n")
     }
