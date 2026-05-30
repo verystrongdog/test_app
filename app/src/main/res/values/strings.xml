@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Package Sync Probe</string>
+    <string name="headline">Package Sync Probe</string>
+    <string name="subheadline">A controlled Android test app that mimics risky capability combinations for post-consent protection demos.</string>
+    <string name="endpoint_hint">Upload endpoint, for example https://httpbin.org/post</string>
+    <string name="default_endpoint">https://httpbin.org/post</string>
+    <string name="request_permissions">Request High-Risk Permissions</string>
+    <string name="refresh_profile">Refresh App Profile</string>
+    <string name="read_contacts">Read Contacts Snapshot</string>
+    <string name="scan_images">Scan Photos Snapshot</string>
+    <string name="scan_packages">Scan Installed Packages</string>
+    <string name="capture_location">Capture Location</string>
+    <string name="record_audio">Record 5s Audio</string>
+    <string name="camera_preview">Take Camera Preview</string>
+    <string name="upload_report">Upload Current Report</string>
+    <string name="schedule_background_probe">Schedule Background Probe</string>
+    <string name="clear_logs">Clear Logs</string>
+    <string name="profile_title">App Risk Surface</string>
+    <string name="report_title">Latest Probe Report</string>
+    <string name="log_title">Event Log</string>
+    <string name="empty_report">No probe data collected yet.</string>
+    <string name="empty_log">No events yet.</string>
+    <string name="profile_template">App label: %1$s\nPackage: %2$s\nSuspicious keyword hit: %3$s\nPermissions:\n%4$s</string>
+    <string name="permission_line">%1$s: %2$s</string>
+    <string name="permission_granted">granted</string>
+    <string name="permission_missing">missing</string>
+    <string name="camera_failed">Camera preview was cancelled or unavailable.</string>
+    <string name="audio_in_progress">Audio capture is already running.</string>
+    <string name="missing_permission">Missing permission: %1$s</string>
+    <string name="background_probe_note">Background probe scheduled in 15 seconds.</string>
+    <string name="upload_skipped">Upload skipped because no endpoint is configured.</string>
+</resources>
+

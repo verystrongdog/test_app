@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.PackageSyncProbe" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/probe_accent</item>
+        <item name="colorPrimaryVariant">@color/probe_accent_dark</item>
+        <item name="colorSecondary">@color/probe_ink</item>
+        <item name="android:statusBarColor">@color/probe_accent_dark</item>
+        <item name="android:navigationBarColor">@color/probe_ink</item>
+        <item name="colorSurface">@color/probe_surface</item>
+        <item name="colorOnSurface">@color/probe_ink</item>
+        <item name="android:windowBackground">@color/probe_sand</item>
+        <item name="materialButtonStyle">@style/Widget.PackageSyncProbe.Button</item>
+    </style>
+
+    <style name="Widget.PackageSyncProbe.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="cornerRadius">14dp</item>
+    </style>
+</resources>
+
