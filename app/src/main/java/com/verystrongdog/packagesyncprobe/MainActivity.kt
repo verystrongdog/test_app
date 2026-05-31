@@ -1,17 +1,20 @@
 package com.verystrongdog.packagesyncprobe
 
-import android.Manifest
 import android.graphics.Bitmap
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
+import android.content.Intent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
@@ -22,6 +25,7 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity() {
     private lateinit var languageToggleButton: Button
     private lateinit var endpointInput: EditText
+    private lateinit var coverageText: TextView
     private lateinit var profileText: TextView
     private lateinit var reportText: TextView
     private lateinit var logText: TextView
@@ -52,7 +56,12 @@ class MainActivity : AppCompatActivity() {
         }
         runOnWorker(getString(R.string.action_saving_camera_preview)) {
             val summary = ProbeEngine.saveCameraPreview(this, bitmap)
-            updateReport(currentReport.copy(generatedAtMillis = System.currentTimeMillis(), cameraSummary = summary))
+            updateReport(
+                currentReport.copy(
+                    generatedAtMillis = System.currentTimeMillis(),
+                    cameraSummary = summary,
+                ),
+            )
             appendLog(summary)
         }
     }
@@ -62,12 +71,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        ProbeNotificationHelper.ensureChannels(this)
         preferenceStore = PreferenceStore(this)
         eventLogStore = EventLogStore(this)
         currentReport = preferenceStore.loadReport()
 
         languageToggleButton = findViewById(R.id.languageToggleButton)
         endpointInput = findViewById(R.id.endpointInput)
+        coverageText = findViewById(R.id.coverageText)
         profileText = findViewById(R.id.profileText)
         reportText = findViewById(R.id.reportText)
         logText = findViewById(R.id.logText)
@@ -81,39 +92,70 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.requestPermissionsButton).setOnClickListener {
             permissionLauncher.launch(ProbeEngine.requestedRuntimePermissions().toTypedArray())
         }
+        findViewById<Button>(R.id.openAppSettingsButton).setOnClickListener {
+            openAppSettings()
+        }
         findViewById<Button>(R.id.refreshProfileButton).setOnClickListener {
             refreshUi()
             appendLog(getString(R.string.log_refreshed_app_profile))
         }
+        findViewById<Button>(R.id.scanPackagesButton).setOnClickListener {
+            runProbe(getString(R.string.log_enumerated_installed_packages)) {
+                val summary = ProbeEngine.collectPackages(this)
+                ProbeActionResult(
+                    currentReport.copy(
+                        generatedAtMillis = System.currentTimeMillis(),
+                        packageSummary = summary,
+                    ),
+                    summary,
+                )
+            }
+        }
         findViewById<Button>(R.id.readContactsButton).setOnClickListener {
             runProbe(getString(R.string.log_read_contacts_snapshot)) {
-                currentReport.copy(
-                    generatedAtMillis = System.currentTimeMillis(),
-                    contactsSummary = ProbeEngine.collectContacts(this),
+                val summary = ProbeEngine.collectContacts(this)
+                ProbeActionResult(
+                    currentReport.copy(
+                        generatedAtMillis = System.currentTimeMillis(),
+                        contactsSummary = summary,
+                    ),
+                    summary,
                 )
             }
         }
         findViewById<Button>(R.id.scanImagesButton).setOnClickListener {
             runProbe(getString(R.string.log_scanned_photo_library)) {
-                currentReport.copy(
-                    generatedAtMillis = System.currentTimeMillis(),
-                    imageSummary = ProbeEngine.collectImages(this),
-                )
-            }
-        }
-        findViewById<Button>(R.id.scanPackagesButton).setOnClickListener {
-            runProbe(getString(R.string.log_enumerated_installed_packages)) {
-                currentReport.copy(
-                    generatedAtMillis = System.currentTimeMillis(),
-                    packageSummary = ProbeEngine.collectPackages(this),
+                val summary = ProbeEngine.collectImages(this)
+                ProbeActionResult(
+                    currentReport.copy(
+                        generatedAtMillis = System.currentTimeMillis(),
+                        imageSummary = summary,
+                    ),
+                    summary,
                 )
             }
         }
         findViewById<Button>(R.id.captureLocationButton).setOnClickListener {
             runProbe(getString(R.string.log_captured_device_location)) {
-                currentReport.copy(
-                    generatedAtMillis = System.currentTimeMillis(),
-                    locationSummary = ProbeEngine.collectLocation(this),
+                val summary = ProbeEngine.collectLocation(this)
+                ProbeActionResult(
+                    currentReport.copy(
+                        generatedAtMillis = System.currentTimeMillis(),
+                        locationSummary = summary,
+                    ),
+                    summary,
+                )
+            }
+        }
+        findViewById<Button>(R.id.readPhoneStateButton).setOnClickListener {
+            runProbe(getString(R.string.log_collected_phone_state)) {
+                val summary = ProbeEngine.collectPhoneState(this)
+                ProbeActionResult(
+                    currentReport.copy(
+                        generatedAtMillis = System.currentTimeMillis(),
+                        phoneStateSummary = summary,
+                    ),
+                    summary,
                 )
             }
         }
@@ -123,8 +165,22 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.cameraPreviewButton).setOnClickListener {
             cameraPreviewLauncher.launch(null)
         }
-        val uploadReportButton = findViewById<Button>(R.id.uploadReportButton)
-        uploadReportButton.setOnClickListener {
+        findViewById<Button>(R.id.postReviewNotificationButton).setOnClickListener {
+            runProbe(getString(R.string.log_posted_review_notification)) {
+                val summary = ProbeNotificationHelper.postReviewNotification(
+                    this,
+                    getString(R.string.review_notification_reason_manual),
+                )
+                ProbeActionResult(
+                    currentReport.copy(
+                        generatedAtMillis = System.currentTimeMillis(),
+                        notificationSummary = summary,
+                    ),
+                    summary,
+                )
+            }
+        }
+        findViewById<Button>(R.id.uploadReportButton).setOnClickListener {
             val endpoint = currentEndpoint()
             preferenceStore.saveEndpoint(endpoint)
             if (endpoint.isBlank()) {
@@ -136,10 +192,28 @@ class MainActivity : AppCompatActivity() {
                         endpoint,
                         ProbeEngine.buildUploadPayload(this, currentReport),
                     )
-                    updateReport(currentReport.copy(generatedAtMillis = System.currentTimeMillis(), lastUploadSummary = summary))
+                    updateReport(
+                        currentReport.copy(
+                            generatedAtMillis = System.currentTimeMillis(),
+                            lastUploadSummary = summary,
+                        ),
+                    )
                     appendLog(summary)
                 }
             }
+        }
+        findViewById<Button>(R.id.startForegroundUploadButton).setOnClickListener {
+            val endpoint = currentEndpoint()
+            preferenceStore.saveEndpoint(endpoint)
+            val intent = ProbeForegroundService.createStartIntent(this, endpoint)
+            ContextCompat.startForegroundService(this, intent)
+            appendLog(getString(R.string.log_started_foreground_upload_service))
+            refreshUi()
+        }
+        findViewById<Button>(R.id.stopForegroundUploadButton).setOnClickListener {
+            startService(ProbeForegroundService.createStopIntent(this))
+            appendLog(getString(R.string.log_stopped_foreground_upload_service))
+            refreshUi()
         }
         findViewById<Button>(R.id.scheduleBackgroundProbeButton).setOnClickListener {
             val endpoint = currentEndpoint()
@@ -151,6 +225,24 @@ class MainActivity : AppCompatActivity() {
             WorkManager.getInstance(this).enqueue(request)
             appendLog(getString(R.string.background_probe_note))
         }
+        findViewById<Button>(R.id.exportAuditSnapshotButton).setOnClickListener {
+            runOnWorker(getString(R.string.action_exporting_audit_snapshot)) {
+                val summary = ProbeAuditExporter.export(
+                    context = this,
+                    endpoint = currentEndpoint(),
+                    profile = ProbeEngine.buildAppProfile(this),
+                    report = currentReport,
+                    eventLog = eventLogStore.getAll(),
+                )
+                updateReport(
+                    currentReport.copy(
+                        generatedAtMillis = System.currentTimeMillis(),
+                        auditExportSummary = summary,
+                    ),
+                )
+                appendLog(summary)
+            }
+        }
         findViewById<Button>(R.id.clearLogsButton).setOnClickListener {
             eventLogStore.clear()
             preferenceStore.clearReport()
@@ -158,6 +250,18 @@ class MainActivity : AppCompatActivity() {
             appendLog(getString(R.string.log_cleared_local_state))
         }
 
+        refreshUi()
+        consumeIntentAction(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        consumeIntentAction(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
         refreshUi()
     }
 
@@ -169,11 +273,38 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun runProbe(logLabel: String, block: MainActivity.() -> ProbeReport) {
-        runOnWorker(logLabel) {
-            val report = block()
-            updateReport(report)
-            appendLog(logLabel)
+    private fun consumeIntentAction(intent: Intent?) {
+        if (intent?.action != ProbeNotificationHelper.ACTION_REVIEW_NOTIFICATION) {
+            return
+        }
+        val reason = intent.getStringExtra(ProbeNotificationHelper.EXTRA_NOTIFICATION_REASON)
+            .orEmpty()
+            .ifBlank { getString(R.string.review_notification_reason_manual) }
+        val summary = getString(R.string.notification_tap_summary, reason)
+        updateReport(
+            currentReport.copy(
+                generatedAtMillis = System.currentTimeMillis(),
+                notificationSummary = summary,
+            ),
+        )
+        appendLog(summary)
+        intent.action = null
+    }
+
+    private fun openAppSettings() {
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", packageName, null),
+        )
+        startActivity(intent)
+        appendLog(getString(R.string.log_opened_app_settings))
+    }
+
+    private fun runProbe(actionLabel: String, block: MainActivity.() -> ProbeActionResult) {
+        runOnWorker(actionLabel) {
+            val result = block()
+            updateReport(result.report)
+            appendLog(result.logMessage)
         }
     }
 
@@ -215,7 +346,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 activeRecorder = null
                 activeAudioFile = null
-                updateReport(currentReport.copy(generatedAtMillis = System.currentTimeMillis(), audioSummary = summary))
+                updateReport(
+                    currentReport.copy(
+                        generatedAtMillis = System.currentTimeMillis(),
+                        audioSummary = summary,
+                    ),
+                )
                 appendLog(summary)
             }, 5000)
         }
@@ -228,6 +364,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshUi() {
+        currentReport = preferenceStore.loadReport()
         preferenceStore.saveEndpoint(currentEndpoint())
         languageToggleButton.text = getString(
             if (AppLocaleManager.isChinese(this)) {
@@ -236,9 +373,20 @@ class MainActivity : AppCompatActivity() {
                 R.string.switch_to_chinese
             },
         )
+        coverageText.text = buildCoverageText()
         profileText.text = ProbeEngine.buildAppProfile(this)
         reportText.text = currentReport.format(this).ifBlank { getString(R.string.empty_report) }
         logText.text = eventLogStore.getAll().ifBlank { getString(R.string.empty_log) }
+    }
+
+    private fun buildCoverageText(): String {
+        val base = ProbeEngine.buildDetectorCoverageSummary(this)
+        val serviceState = if (ProbeForegroundService.isRunning()) {
+            getString(R.string.foreground_service_state_running)
+        } else {
+            getString(R.string.foreground_service_state_idle)
+        }
+        return "$base\n${getString(R.string.foreground_service_state_line, serviceState)}"
     }
 
     private fun appendLog(message: String) {
@@ -249,4 +397,9 @@ class MainActivity : AppCompatActivity() {
     private fun currentEndpoint(): String {
         return endpointInput.text?.toString()?.trim().orEmpty()
     }
+
+    private data class ProbeActionResult(
+        val report: ProbeReport,
+        val logMessage: String,
+    )
 }

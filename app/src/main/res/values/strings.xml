@@ -1,75 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Package Sync Probe</string>
-    <string name="headline">Package Sync Probe</string>
-    <string name="subheadline">A controlled Android test app that mimics risky capability combinations for post-consent protection demos.</string>
+    <string name="app_name">Post-Consent Test Probe</string>
+    <string name="headline">Post-Consent Test Probe</string>
+    <string name="subheadline">A controlled Android probe aligned with baseline profiling, runtime observation, outbound supervision, permission surface review, and audit snapshot demos.</string>
     <string name="switch_to_chinese">切换到中文</string>
     <string name="switch_to_english">Switch to English</string>
+
+    <string name="coverage_title">Detector Module Coverage</string>
+    <string name="coverage_baseline">Module 1 - Baseline profiling: suspicious package label, broad declared permissions, network access, and package visibility are all present.</string>
+    <string name="coverage_runtime">Module 2 - Runtime observation: manual notification, foreground-service upload chain, and delayed background probe all emit observable behavior.</string>
+    <string name="coverage_outbound">Module 3 - Outbound supervision: direct POST upload, foreground retry burst, and background upload all exercise network egress.</string>
+    <string name="coverage_permission_surface">Module 4 - Permission surface: runtime permission requests, app-settings review, contacts, media, location, phone-state, microphone, and camera access are available.</string>
+    <string name="coverage_audit">Module 5 - Audit snapshot: local report persistence, event logging, and JSON export are built in.</string>
+
+    <string name="module_baseline_title">Module 1 - Baseline Profiling</string>
+    <string name="module_baseline_summary">Refresh the declared capability surface and enumerate installed packages so the detector can score this probe as a high-risk target.</string>
+    <string name="module_runtime_title">Module 2 - Runtime Observation</string>
+    <string name="module_runtime_summary">Trigger notification, foreground-service, and delayed background behavior so the detector can correlate visible and non-visible runtime signals.</string>
+    <string name="module_outbound_title">Module 3 - Outbound Supervision</string>
+    <string name="module_outbound_summary">Point the probe at an HTTP endpoint and generate reproducible outbound traffic for VPN-bound validation and exfiltration review.</string>
+    <string name="module_permission_title">Module 4 - Permission Surface</string>
+    <string name="module_permission_summary">Request the risky runtime set and perform controlled reads so each sensitive surface in the detector can be exercised on-device.</string>
+    <string name="module_audit_title">Module 5 - Audit Snapshot</string>
+    <string name="module_audit_summary">Persist the latest report, event history, and exported JSON evidence for thesis screenshots and replayable validation records.</string>
+
     <string name="endpoint_hint">Upload endpoint, for example https://httpbin.org/post</string>
     <string name="default_endpoint">https://httpbin.org/post</string>
     <string name="request_permissions">Request High-Risk Permissions</string>
+    <string name="open_app_settings">Open App Settings</string>
     <string name="refresh_profile">Refresh App Profile</string>
-    <string name="read_contacts">Read Contacts Snapshot</string>
-    <string name="scan_images">Scan Photos Snapshot</string>
     <string name="scan_packages">Scan Installed Packages</string>
-    <string name="capture_location">Capture Location</string>
-    <string name="record_audio">Record 5s Audio</string>
-    <string name="camera_preview">Take Camera Preview</string>
+    <string name="post_review_notification">Post Review Notification</string>
+    <string name="start_foreground_upload">Start Foreground Upload Chain</string>
+    <string name="stop_foreground_upload">Stop Foreground Upload Chain</string>
     <string name="upload_report">Upload Current Report</string>
     <string name="schedule_background_probe">Schedule Background Probe</string>
+    <string name="read_contacts">Read Contacts Snapshot</string>
+    <string name="scan_images">Scan Photos Snapshot</string>
+    <string name="capture_location">Capture Location</string>
+    <string name="read_phone_state">Read Phone State Snapshot</string>
+    <string name="record_audio">Record 5s Audio</string>
+    <string name="camera_preview">Take Camera Preview</string>
+    <string name="export_audit_snapshot">Export Audit Snapshot</string>
     <string name="clear_logs">Clear Logs</string>
+
     <string name="profile_title">App Risk Surface</string>
     <string name="report_title">Latest Probe Report</string>
     <string name="log_title">Event Log</string>
     <string name="empty_report">No probe data collected yet.</string>
     <string name="empty_log">No events yet.</string>
+
     <string name="report_generated_at">Generated at: %1$s</string>
+    <string name="report_section_baseline">[Baseline Profiling]</string>
+    <string name="report_section_permission_surface">[Permission Surface]</string>
+    <string name="report_section_runtime">[Runtime Observation]</string>
+    <string name="report_section_outbound">[Outbound Supervision]</string>
+    <string name="report_section_audit">[Audit Snapshot]</string>
     <string name="report_contacts">Contacts: %1$s</string>
     <string name="report_images">Images: %1$s</string>
     <string name="report_packages">Packages: %1$s</string>
     <string name="report_location">Location: %1$s</string>
+    <string name="report_phone_state">Phone state: %1$s</string>
     <string name="report_audio">Audio: %1$s</string>
     <string name="report_camera">Camera: %1$s</string>
+    <string name="report_notification">Notification: %1$s</string>
+    <string name="report_foreground_service">Foreground service: %1$s</string>
     <string name="report_upload">Upload: %1$s</string>
     <string name="report_background_probe">Background probe: %1$s</string>
+    <string name="report_audit_export">Audit export: %1$s</string>
     <string name="report_not_collected">not collected</string>
-    <string name="profile_template">App label: %1$s\nPackage: %2$s\nSuspicious keyword hit: %3$s\nPermissions:\n%4$s</string>
+
+    <string name="profile_template">App label: %1$s\nPackage: %2$s\nSuspicious keyword hit: %3$s\nSensitive data permissions: %4$s\nIdentity / visibility permissions: %5$s\nSensor permissions: %6$s\nNetwork surface: %7$s\nDeclared permissions:\n%8$s</string>
     <string name="permission_line">%1$s: %2$s</string>
     <string name="permission_granted">granted</string>
     <string name="permission_missing">missing</string>
     <string name="suspicious_keyword_yes">yes (%1$s)</string>
     <string name="suspicious_keyword_no">no</string>
     <string name="value_none">none</string>
+    <string name="value_yes">yes</string>
+    <string name="value_no">no</string>
+
     <string name="contacts_summary">Read %1$d phone-contact rows; samples: %2$s</string>
     <string name="images_summary">Scanned %1$d image entries; newest: %2$s</string>
     <string name="packages_summary">Enumerated %1$d installed applications; sample: %2$s</string>
     <string name="location_unavailable">No last-known location is available on this device right now</string>
     <string name="location_summary">Captured last-known location lat=%1$s, lon=%2$s, provider=%3$s</string>
+    <string name="phone_state_unavailable">Telephony service is unavailable on this device</string>
+    <string name="phone_state_summary">Phone type=%1$s, SIM operator=%2$s, network operator=%3$s</string>
     <string name="camera_saved_summary">Saved camera preview to %1$s (%2$d bytes)</string>
-    <string name="upload_payload_note">Controlled high-risk behavior test payload</string>
+    <string name="upload_payload_note">Controlled post-consent probe payload</string>
     <string name="network_upload_result">HTTP %1$d to %2$s</string>
     <string name="network_upload_result_with_body">HTTP %1$d to %2$s, body: %3$s</string>
     <string name="camera_failed">Camera preview was cancelled or unavailable.</string>
     <string name="audio_in_progress">Audio capture is already running.</string>
     <string name="missing_permission">Missing permission: %1$s</string>
     <string name="unknown_error">unknown error</string>
+
     <string name="background_probe_note">Background probe scheduled in 15 seconds.</string>
     <string name="background_contacts_skipped">Skipped contact read because READ_CONTACTS is missing</string>
     <string name="background_upload_failed">Background upload failed: %1$s</string>
-    <string name="background_probe_summary">Background probe ran package scan and optional upload. %1$s. %2$s</string>
+    <string name="background_probe_summary">Background probe ran package scan, optional upload, and notification replay. %1$s. %2$s. %3$s</string>
     <string name="upload_skipped">Upload skipped because no endpoint is configured.</string>
+
     <string name="log_runtime_permission_request_completed">Runtime permission request completed: %1$d/%2$d granted</string>
     <string name="log_refreshed_app_profile">Refreshed app profile</string>
     <string name="log_read_contacts_snapshot">Read contacts snapshot</string>
     <string name="log_scanned_photo_library">Scanned photo library</string>
     <string name="log_enumerated_installed_packages">Enumerated installed packages</string>
     <string name="log_captured_device_location">Captured device location</string>
+    <string name="log_collected_phone_state">Collected phone-state snapshot</string>
+    <string name="log_posted_review_notification">Posted review notification</string>
+    <string name="log_started_foreground_upload_service">Started foreground upload chain</string>
+    <string name="log_stopped_foreground_upload_service">Stop requested for foreground upload chain</string>
+    <string name="log_opened_app_settings">Opened app settings for manual permission review</string>
     <string name="action_saving_camera_preview">Saving camera preview</string>
     <string name="action_uploading_report">Uploading report</string>
     <string name="action_recording_microphone_sample">Recording microphone sample</string>
+    <string name="action_exporting_audit_snapshot">Exporting audit snapshot</string>
     <string name="log_cleared_local_state">Cleared local report and log state</string>
     <string name="log_action_failed">%1$s failed: %2$s</string>
     <string name="log_started_microphone_recording">Started a 5-second microphone recording to %1$s</string>
     <string name="log_recorded_microphone_sample">Recorded 5-second microphone sample to %1$s (%2$d bytes)</string>
     <string name="log_audio_capture_failed">Audio capture failed during stop: %1$s</string>
+
+    <string name="review_notification_reason_manual">manual review request from the probe console</string>
+    <string name="review_notification_reason_foreground">foreground upload chain completed and is ready for review</string>
+    <string name="review_notification_reason_background">background probe completed and is ready for review</string>
+    <string name="foreground_service_channel_name">Probe foreground upload</string>
+    <string name="foreground_service_channel_description">Visible foreground-service uploads used to exercise runtime observation and outbound supervision.</string>
+    <string name="review_notification_channel_name">Probe review notification</string>
+    <string name="review_notification_channel_description">Notifications used to test notification-tap and review flows.</string>
+    <string name="notification_permission_required">Notification permission is required before posting review events.</string>
+    <string name="review_notification_title">Probe Review Needed</string>
+    <string name="review_notification_text">Tap to reopen the probe: %1$s</string>
+    <string name="notification_posted_summary">Posted review notification: %1$s</string>
+    <string name="notification_tap_summary">Notification reopened the probe: %1$s</string>
+    <string name="notification_post_failed">Notification replay failed: %1$s</string>
+
+    <string name="foreground_service_notification_title">Foreground Upload Chain Active</string>
+    <string name="foreground_service_notification_text">The probe is emitting repeated outbound traffic for bounded validation.</string>
+    <string name="foreground_service_no_endpoint">Foreground upload chain skipped because no endpoint is configured.</string>
+    <string name="foreground_service_partial_summary">Foreground upload chain stopped after %1$d attempt(s): %2$s</string>
+    <string name="foreground_service_summary">Foreground upload chain completed: %1$s</string>
+    <string name="foreground_service_failed">Foreground upload chain failed: %1$s</string>
+    <string name="foreground_service_stopped_by_user">Foreground upload chain was stopped by user action.</string>
+    <string name="foreground_service_already_running">Foreground upload chain is already running.</string>
+    <string name="foreground_service_state_running">running</string>
+    <string name="foreground_service_state_idle">idle</string>
+    <string name="foreground_service_state_line">Foreground upload chain state: %1$s</string>
+
+    <string name="audit_export_summary">Exported audit snapshot to %1$s</string>
 </resources>

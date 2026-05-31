@@ -11,6 +11,7 @@ class BackgroundProbeWorker(
 ) : Worker(appContext, params) {
     override fun doWork(): Result {
         AppLocaleManager.applySavedLocale(applicationContext)
+        ProbeNotificationHelper.ensureChannels(applicationContext)
         val store = PreferenceStore(applicationContext)
         val logStore = EventLogStore(applicationContext)
         val endpoint = inputData.getString(KEY_ENDPOINT).orEmpty()
@@ -38,12 +39,29 @@ class BackgroundProbeWorker(
                 )
             }
         }
+        val notificationSummary = runCatching {
+            ProbeNotificationHelper.postReviewNotification(
+                applicationContext,
+                applicationContext.getString(R.string.review_notification_reason_background),
+            )
+        }.getOrElse { error ->
+            applicationContext.getString(
+                R.string.notification_post_failed,
+                error.message ?: applicationContext.getString(R.string.unknown_error),
+            )
+        }
 
-        val summary = applicationContext.getString(R.string.background_probe_summary, packageSummary, uploadSummary)
+        val summary = applicationContext.getString(
+            R.string.background_probe_summary,
+            packageSummary,
+            uploadSummary,
+            notificationSummary,
+        )
         report = report.copy(
             generatedAtMillis = System.currentTimeMillis(),
             contactsSummary = contactsSummary,
             packageSummary = packageSummary,
+            notificationSummary = notificationSummary,
             lastUploadSummary = uploadSummary,
             lastBackgroundProbeSummary = summary,
         )

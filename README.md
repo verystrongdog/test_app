@@ -1,48 +1,51 @@
-# Package Sync Probe
+# Post-Consent Test Probe
 
-`Package Sync Probe` is a controlled Android test app designed to mimic high-risk capability combinations for the `high-risk-app-isolation-system` project.
+`Post-Consent Test Probe` is a controlled Android app used to exercise the
+updated `high-risk-app-isolation-system` prototype.
 
-It is intentionally shaped to look risky to the prototype:
+It is no longer just a generic risky sample. It is now structured around the
+same five feature modules as the detector:
 
-- package name contains `package`
-- app label contains `Package`
-- requests contacts, media, location, microphone, camera, package-visibility, and network capabilities
-- can perform visible foreground collection actions
-- can schedule a delayed background probe and optional upload
+1. baseline profiling
+2. runtime observation
+3. outbound supervision
+4. permission surface
+5. audit snapshot
 
-## What It Does
+## What It Covers
 
-- requests a high-risk permission set at runtime
-- reads contacts and shows a summary
-- scans image metadata from `MediaStore`
-- enumerates installed packages
-- captures last-known location
-- records a 5-second microphone sample
-- saves a camera preview frame
-- uploads the current report to a configurable HTTP endpoint
-- schedules a background `WorkManager` probe that scans packages and can upload again
-- keeps a local event log and the latest probe report
+- suspicious package label and broad declared permissions
+- contacts, media, location, phone-state, microphone, and camera access
+- package enumeration with `QUERY_ALL_PACKAGES`
+- direct report upload to a configurable HTTP endpoint
+- foreground-service upload chain for repeated outbound traffic
+- delayed background `WorkManager` probe with optional upload and notification
+- review notifications that can be tapped to reopen the probe
+- local event logging, structured report persistence, and JSON audit export
 
 ## Why It Fits The Detector
 
-This app was built to exercise the detector's current strengths:
+This probe is designed to match the detector's current post-consent model:
 
 - baseline risk surface detection
-- suspicious profile keywords
-- sensitive-permission and network combinations
-- package visibility exposure
-- scenario-driven demonstrations for foreground versus background behavior
-- bounded `VpnService` validation using a selected target app
+- identity, package-visibility, and network exposure review
+- foreground versus background runtime observation
+- notification-driven return-to-app behavior
+- bounded `VpnService` validation against reproducible outbound traffic
+- local evidence export for thesis screenshots and replay
 
 ## Suggested Demo Flow
 
 1. Install this app on the same device as the detector prototype.
-2. Grant contacts, media, location, microphone, and camera permissions.
-3. Trigger `Read Contacts Snapshot`, `Scan Photos Snapshot`, and `Scan Installed Packages`.
-4. Trigger `Upload Current Report` to create network activity.
-5. Trigger `Schedule Background Probe` and wait 15 seconds.
-6. In the detector prototype, select this app and compare strict versus compatibility mode outputs.
-7. Use the detector's bounded `VpnService` path to test network control against this app.
+2. Grant contacts, media, location, phone-state, microphone, camera, and notification permissions.
+3. Trigger `Refresh App Profile` and `Scan Installed Packages`.
+4. Trigger `Read Contacts Snapshot`, `Scan Photos Snapshot`, `Capture Location`, `Read Phone State Snapshot`, `Record 5s Audio`, and `Take Camera Preview`.
+5. Trigger `Upload Current Report` to create direct outbound activity.
+6. Trigger `Start Foreground Upload Chain` to generate repeated foreground egress.
+7. Trigger `Schedule Background Probe` and wait 15 seconds for background upload plus notification replay.
+8. Tap the posted notification to generate a notification-return runtime path.
+9. Export the JSON audit snapshot after the run.
+10. In the detector prototype, select this app as the observation target and validate the five module outputs plus bounded VPN control.
 
 ## Build Notes
 
@@ -51,7 +54,7 @@ This app was built to exercise the detector's current strengths:
 - Min SDK: `26`
 - Target SDK: `34`
 
-This repository was scaffolded from scratch, so you may need a local JDK and Android SDK before running:
+Build with:
 
 ```bash
 ./gradlew assembleDebug

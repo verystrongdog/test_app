@@ -33,95 +33,284 @@
             android:layout_marginTop="16dp"
             android:text="@string/switch_to_chinese" />
 
-        <EditText
-            android:id="@+id/endpointInput"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:backgroundTint="@color/probe_accent"
-            android:hint="@string/endpoint_hint"
-            android:inputType="textUri"
-            android:minHeight="56dp"
-            android:padding="12dp"
-            android:textColor="@color/probe_ink"
-            android:textColorHint="@color/probe_accent_dark" />
+            android:background="@color/probe_surface"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/requestPermissionsButton"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/coverage_title"
+                android:textColor="@color/probe_ink"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/coverageText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/probe_ink"
+                android:textIsSelectable="true"
+                android:typeface="monospace" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/request_permissions" />
+            android:background="@color/probe_surface"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/refreshProfileButton"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/module_baseline_title"
+                android:textColor="@color/probe_ink"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/module_baseline_summary"
+                android:textColor="@color/probe_ink" />
+
+            <Button
+                android:id="@+id/refreshProfileButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/refresh_profile" />
+
+            <Button
+                android:id="@+id/scanPackagesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/scan_packages" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/refresh_profile" />
+            android:layout_marginTop="16dp"
+            android:background="@color/probe_surface"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/readContactsButton"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/module_runtime_title"
+                android:textColor="@color/probe_ink"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/module_runtime_summary"
+                android:textColor="@color/probe_ink" />
+
+            <Button
+                android:id="@+id/postReviewNotificationButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/post_review_notification" />
+
+            <Button
+                android:id="@+id/startForegroundUploadButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/start_foreground_upload" />
+
+            <Button
+                android:id="@+id/stopForegroundUploadButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/stop_foreground_upload" />
+
+            <Button
+                android:id="@+id/scheduleBackgroundProbeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/schedule_background_probe" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/read_contacts" />
+            android:layout_marginTop="16dp"
+            android:background="@color/probe_surface"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/scanImagesButton"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/module_outbound_title"
+                android:textColor="@color/probe_ink"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/module_outbound_summary"
+                android:textColor="@color/probe_ink" />
+
+            <EditText
+                android:id="@+id/endpointInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/probe_accent"
+                android:hint="@string/endpoint_hint"
+                android:importantForAutofill="no"
+                android:inputType="textUri"
+                android:minHeight="56dp"
+                android:padding="12dp"
+                android:textColor="@color/probe_ink"
+                android:textColorHint="@color/probe_accent_dark" />
+
+            <Button
+                android:id="@+id/uploadReportButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/upload_report" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/scan_images" />
+            android:layout_marginTop="16dp"
+            android:background="@color/probe_surface"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/scanPackagesButton"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/module_permission_title"
+                android:textColor="@color/probe_ink"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/module_permission_summary"
+                android:textColor="@color/probe_ink" />
+
+            <Button
+                android:id="@+id/requestPermissionsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/request_permissions" />
+
+            <Button
+                android:id="@+id/openAppSettingsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/open_app_settings" />
+
+            <Button
+                android:id="@+id/readContactsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/read_contacts" />
+
+            <Button
+                android:id="@+id/scanImagesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/scan_images" />
+
+            <Button
+                android:id="@+id/captureLocationButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/capture_location" />
+
+            <Button
+                android:id="@+id/readPhoneStateButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/read_phone_state" />
+
+            <Button
+                android:id="@+id/recordAudioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/record_audio" />
+
+            <Button
+                android:id="@+id/cameraPreviewButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/camera_preview" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/scan_packages" />
+            android:layout_marginTop="16dp"
+            android:background="@color/probe_surface"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/captureLocationButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/capture_location" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/module_audit_title"
+                android:textColor="@color/probe_ink"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/recordAudioButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/record_audio" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/module_audit_summary"
+                android:textColor="@color/probe_ink" />
 
-        <Button
-            android:id="@+id/cameraPreviewButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/camera_preview" />
+            <Button
+                android:id="@+id/exportAuditSnapshotButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/export_audit_snapshot" />
 
-        <Button
-            android:id="@+id/uploadReportButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/upload_report" />
-
-        <Button
-            android:id="@+id/scheduleBackgroundProbeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/schedule_background_probe" />
-
-        <Button
-            android:id="@+id/clearLogsButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/clear_logs" />
+            <Button
+                android:id="@+id/clearLogsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/clear_logs" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -158,7 +347,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@android:color/white"
-            android:minHeight="140dp"
+            android:minHeight="180dp"
             android:padding="14dp"
             android:textColor="@color/probe_ink"
             android:textIsSelectable="true"

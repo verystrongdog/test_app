@@ -1,75 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">高危行为测试探针</string>
-    <string name="headline">高危行为测试探针</string>
-    <string name="subheadline">这是一个受控的 Android 测试应用，用于模拟高风险能力组合，方便演示授权后持续防护检测流程。</string>
+    <string name="app_name">授权后防护测试探针</string>
+    <string name="headline">授权后防护测试探针</string>
+    <string name="subheadline">这是一个受控 Android 探针，按基线画像、运行时观测、外传监管、权限面复核和审计快照五个模块来适配毕设项目。</string>
     <string name="switch_to_chinese">切换到中文</string>
     <string name="switch_to_english">Switch to English</string>
+
+    <string name="coverage_title">检测器模块覆盖</string>
+    <string name="coverage_baseline">模块 1 - 基线画像：已具备可疑包名标签、宽权限声明、网络访问和包可见性。</string>
+    <string name="coverage_runtime">模块 2 - 运行时观测：手动通知、前台服务上传链和延迟后台探测都会产生可观察行为。</string>
+    <string name="coverage_outbound">模块 3 - 外传监管：直接 POST 上传、前台重试突发链和后台上传都会触发网络外发。</string>
+    <string name="coverage_permission_surface">模块 4 - 权限面：已覆盖运行时权限申请、应用设置复核，以及联系人、媒体、位置、电话状态、麦克风和相机访问。</string>
+    <string name="coverage_audit">模块 5 - 审计快照：已内置本地报告持久化、事件日志和 JSON 导出。</string>
+
+    <string name="module_baseline_title">模块 1 - 基线画像</string>
+    <string name="module_baseline_summary">刷新声明能力面并枚举已安装应用，让检测器能把这个探针识别成高风险目标。</string>
+    <string name="module_runtime_title">模块 2 - 运行时观测</string>
+    <string name="module_runtime_summary">触发通知、前台服务和延迟后台行为，让检测器关联前台可见与后台不可见的运行时信号。</string>
+    <string name="module_outbound_title">模块 3 - 外传监管</string>
+    <string name="module_outbound_summary">把探针指向 HTTP 端点，生成可重复的外发流量，用于 VPN 有界验证和外传审查。</string>
+    <string name="module_permission_title">模块 4 - 权限面</string>
+    <string name="module_permission_summary">申请高危权限并执行受控读取，让检测器的每个敏感面都能在真机上被触发。</string>
+    <string name="module_audit_title">模块 5 - 审计快照</string>
+    <string name="module_audit_summary">保存最新报告、事件历史和导出的 JSON 证据，方便论文截图和可复现验证记录。</string>
+
     <string name="endpoint_hint">上传端点，例如 https://httpbin.org/post</string>
     <string name="default_endpoint">https://httpbin.org/post</string>
     <string name="request_permissions">申请高危权限</string>
+    <string name="open_app_settings">打开应用设置</string>
     <string name="refresh_profile">刷新应用画像</string>
-    <string name="read_contacts">读取联系人快照</string>
-    <string name="scan_images">扫描照片快照</string>
     <string name="scan_packages">扫描已安装应用</string>
-    <string name="capture_location">采集位置</string>
-    <string name="record_audio">录制 5 秒音频</string>
-    <string name="camera_preview">拍摄相机预览</string>
+    <string name="post_review_notification">发送复核通知</string>
+    <string name="start_foreground_upload">启动前台上传链</string>
+    <string name="stop_foreground_upload">停止前台上传链</string>
     <string name="upload_report">上传当前报告</string>
     <string name="schedule_background_probe">安排后台探测</string>
+    <string name="read_contacts">读取联系人快照</string>
+    <string name="scan_images">扫描照片快照</string>
+    <string name="capture_location">采集位置</string>
+    <string name="read_phone_state">读取电话状态快照</string>
+    <string name="record_audio">录制 5 秒音频</string>
+    <string name="camera_preview">拍摄相机预览</string>
+    <string name="export_audit_snapshot">导出审计快照</string>
     <string name="clear_logs">清空日志</string>
+
     <string name="profile_title">应用风险面</string>
-    <string name="report_title">最新探测报告</string>
+    <string name="report_title">最新探针报告</string>
     <string name="log_title">事件日志</string>
-    <string name="empty_report">还没有采集到探测数据。</string>
+    <string name="empty_report">还没有采集到探针数据。</string>
     <string name="empty_log">还没有事件。</string>
+
     <string name="report_generated_at">生成时间：%1$s</string>
+    <string name="report_section_baseline">[基线画像]</string>
+    <string name="report_section_permission_surface">[权限面]</string>
+    <string name="report_section_runtime">[运行时观测]</string>
+    <string name="report_section_outbound">[外传监管]</string>
+    <string name="report_section_audit">[审计快照]</string>
     <string name="report_contacts">联系人：%1$s</string>
     <string name="report_images">图片：%1$s</string>
     <string name="report_packages">应用包：%1$s</string>
     <string name="report_location">位置：%1$s</string>
+    <string name="report_phone_state">电话状态：%1$s</string>
     <string name="report_audio">音频：%1$s</string>
     <string name="report_camera">相机：%1$s</string>
+    <string name="report_notification">通知：%1$s</string>
+    <string name="report_foreground_service">前台服务：%1$s</string>
     <string name="report_upload">上传：%1$s</string>
     <string name="report_background_probe">后台探测：%1$s</string>
+    <string name="report_audit_export">审计导出：%1$s</string>
     <string name="report_not_collected">未采集</string>
-    <string name="profile_template">应用名称：%1$s\n包名：%2$s\n可疑关键词命中：%3$s\n权限：\n%4$s</string>
+
+    <string name="profile_template">应用名称：%1$s\n包名：%2$s\n可疑关键词命中：%3$s\n敏感数据权限：%4$s\n身份 / 可见性权限：%5$s\n传感器权限：%6$s\n网络面：%7$s\n声明权限：\n%8$s</string>
     <string name="permission_line">%1$s：%2$s</string>
     <string name="permission_granted">已授权</string>
     <string name="permission_missing">未授权</string>
     <string name="suspicious_keyword_yes">是（%1$s）</string>
     <string name="suspicious_keyword_no">否</string>
     <string name="value_none">无</string>
+    <string name="value_yes">有</string>
+    <string name="value_no">无</string>
+
     <string name="contacts_summary">已读取 %1$d 条联系人电话记录；样本：%2$s</string>
     <string name="images_summary">已扫描 %1$d 条图片记录；最新项：%2$s</string>
     <string name="packages_summary">已枚举 %1$d 个已安装应用；样本：%2$s</string>
     <string name="location_unavailable">当前设备暂无可用的最近位置记录</string>
     <string name="location_summary">已获取最近位置，纬度=%1$s，经度=%2$s，来源=%3$s</string>
+    <string name="phone_state_unavailable">当前设备不可用电话服务</string>
+    <string name="phone_state_summary">电话类型=%1$s，SIM 运营商=%2$s，网络运营商=%3$s</string>
     <string name="camera_saved_summary">已保存相机预览到 %1$s（%2$d 字节）</string>
-    <string name="upload_payload_note">受控高危行为测试载荷</string>
+    <string name="upload_payload_note">受控授权后探针载荷</string>
     <string name="network_upload_result">HTTP %1$d 到 %2$s</string>
     <string name="network_upload_result_with_body">HTTP %1$d 到 %2$s，响应体：%3$s</string>
     <string name="camera_failed">相机预览已取消或当前不可用。</string>
     <string name="audio_in_progress">音频采集正在进行中。</string>
     <string name="missing_permission">缺少权限：%1$s</string>
     <string name="unknown_error">未知错误</string>
+
     <string name="background_probe_note">后台探测已安排，15 秒后执行。</string>
     <string name="background_contacts_skipped">由于缺少 READ_CONTACTS，已跳过联系人读取</string>
     <string name="background_upload_failed">后台上传失败：%1$s</string>
-    <string name="background_probe_summary">后台探测已执行包扫描并尝试上传。%1$s。%2$s</string>
+    <string name="background_probe_summary">后台探测已执行包扫描、可选上传和通知回放。%1$s。%2$s。%3$s</string>
     <string name="upload_skipped">由于未配置上传端点，已跳过上传。</string>
+
     <string name="log_runtime_permission_request_completed">运行时权限申请完成：已授权 %1$d/%2$d 项</string>
     <string name="log_refreshed_app_profile">已刷新应用画像</string>
     <string name="log_read_contacts_snapshot">已读取联系人快照</string>
     <string name="log_scanned_photo_library">已扫描照片库</string>
     <string name="log_enumerated_installed_packages">已枚举已安装应用</string>
     <string name="log_captured_device_location">已采集设备位置</string>
+    <string name="log_collected_phone_state">已采集电话状态快照</string>
+    <string name="log_posted_review_notification">已发送复核通知</string>
+    <string name="log_started_foreground_upload_service">已启动前台上传链</string>
+    <string name="log_stopped_foreground_upload_service">已请求停止前台上传链</string>
+    <string name="log_opened_app_settings">已打开应用设置供手动权限复核</string>
     <string name="action_saving_camera_preview">正在保存相机预览</string>
     <string name="action_uploading_report">正在上传报告</string>
     <string name="action_recording_microphone_sample">正在录制麦克风样本</string>
+    <string name="action_exporting_audit_snapshot">正在导出审计快照</string>
     <string name="log_cleared_local_state">已清空本地报告和日志状态</string>
     <string name="log_action_failed">%1$s失败：%2$s</string>
     <string name="log_started_microphone_recording">已开始录制 5 秒麦克风音频到 %1$s</string>
     <string name="log_recorded_microphone_sample">已录制 5 秒麦克风样本到 %1$s（%2$d 字节）</string>
     <string name="log_audio_capture_failed">停止音频采集时失败：%1$s</string>
+
+    <string name="review_notification_reason_manual">来自探针控制台的手动复核请求</string>
+    <string name="review_notification_reason_foreground">前台上传链已完成，等待复核</string>
+    <string name="review_notification_reason_background">后台探测已完成，等待复核</string>
+    <string name="foreground_service_channel_name">探针前台上传</string>
+    <string name="foreground_service_channel_description">用于触发运行时观测和外传监管的可见前台服务上传。</string>
+    <string name="review_notification_channel_name">探针复核通知</string>
+    <string name="review_notification_channel_description">用于测试通知点击和复核链路的通知。</string>
+    <string name="notification_permission_required">发送复核事件前需要先授予通知权限。</string>
+    <string name="review_notification_title">探针需要复核</string>
+    <string name="review_notification_text">点击以重新打开探针：%1$s</string>
+    <string name="notification_posted_summary">已发送复核通知：%1$s</string>
+    <string name="notification_tap_summary">通知已重新打开探针：%1$s</string>
+    <string name="notification_post_failed">通知回放失败：%1$s</string>
+
+    <string name="foreground_service_notification_title">前台上传链运行中</string>
+    <string name="foreground_service_notification_text">探针正在发送重复外发流量，用于有界验证。</string>
+    <string name="foreground_service_no_endpoint">由于未配置端点，前台上传链已跳过。</string>
+    <string name="foreground_service_partial_summary">前台上传链在 %1$d 次尝试后被停止：%2$s</string>
+    <string name="foreground_service_summary">前台上传链已完成：%1$s</string>
+    <string name="foreground_service_failed">前台上传链失败：%1$s</string>
+    <string name="foreground_service_stopped_by_user">前台上传链已被用户停止。</string>
+    <string name="foreground_service_already_running">前台上传链已在运行中。</string>
+    <string name="foreground_service_state_running">运行中</string>
+    <string name="foreground_service_state_idle">空闲</string>
+    <string name="foreground_service_state_line">前台上传链状态：%1$s</string>
+
+    <string name="audit_export_summary">已导出审计快照到 %1$s</string>
 </resources>
